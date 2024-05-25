@@ -1,7 +1,7 @@
 ---
-- include: install/main.yml
-- include: configuration.yml
-- include: plugins.yml
-- include: vhost.yml
-- include: federation.yml
+- import_tasks: install/main.yml
+- import_tasks: configuration.yml
+- import_tasks: plugins.yml
+- import_tasks: vhost.yml
+- import_tasks: federation.yml
   when: rabbitmq_federation

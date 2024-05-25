@@ -1,2 +1,2 @@
 ---
-- include: standalone.yml
+- import_tasks: standalone.yml
