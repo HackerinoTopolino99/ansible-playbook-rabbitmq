@@ -1,43 +1,43 @@
 ---
-- name: active the federation plugin
+- name: Active the federation plugin
   rabbitmq_plugin:
-    names=rabbitmq_federation
-    new_only=yes
+    names: rabbitmq_federation
+    new_only: true
   register: federation_plugin
 
-- name: restart RabbitMQ to be able to setup federation
+- name: Restart RabbitMQ to be able to setup federation
   service:
-    name=rabbitmq-server
-    state=restarted
+    name: rabbitmq-server
+    state: restarted
   when: federation_plugin.changed
 
-- name: set the federation-upstream parameter
+- name: Set the federation-upstream parameter
   rabbitmq_parameter:
-    component=federation-upstream
-    name={{ item.name }}
-    vhost={{ item.vhost | default('/', false) }}
-    value=" {{ item.value }} "
-  with_items: rabbitmq_federation_configuration
+    component: federation-upstream
+    name: "{{ item.name }}"
+    vhost: "{{ item.vhost | default('/', false) }}"
+    value: "{{ item.value }}"
+  loop: rabbitmq_federation_configuration
 
-- name: set the policy for the federation
+- name: Set the policy for the federation
   rabbitmq_policy:
-    name={{ item.name }}
-    vhost={{ item.vhost | default('/', false) }}
-    pattern={{ item.pattern }}
-    tags={{ item.tags }}
-  with_items: rabbitmq_policy_configuration
+    name: "{{ item.name }}"
+    vhost: "{{ item.vhost | default('/', false) }}"
+    pattern: "{{ item.pattern }}"
+    tags: "{{ item.tags }}"
+  loop: rabbitmq_policy_configuration
 
-- name: get the version of rabbitmq
+- name: Get the version of rabbitmq
   shell: rabbitmqctl status | awk '{print $NF}'
   register: rabbitmq_version
 
 # local-username is no longer required with 3.3.0
 # http://www.rabbitmq.com/release-notes/README-3.3.0.txt
-- name: set the local username for the federation
+- name: Set the local username for the federation
   rabbitmq_parameter:
-    component=federation
-    name=local-username
-    value='"{{ item.local_username | default( 'guest', false ) }}"'
-    vhost={{ item.vhost | default( '/', false) }}
-  with_items: rabbitmq_federation_configuration
+    component: federation
+    name: local-username
+    value: "{{ item.local_username | default('guest', false') }}"
+    vhost: "{{ item.vhost | default( '/', false) }}"
+  loop: rabbitmq_federation_configuration
   when: rabbitmq_version.stdout | version_compare('3.3.0', '<')

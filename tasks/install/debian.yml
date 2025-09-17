@@ -1,20 +1,32 @@
 ---
-
 # RabbitMQ official install
-- name: "add the official rabbitmq repository's key"
-  apt_key: url=https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
-  when: not rabbitmq_os_package
 
-- name: add the official rabbitmq repository
-  copy:
-    src=rabbitmq.list
-    dest=/etc/apt/sources.list.d/
-    backup=yes
-  register: aptrepo
-  when: not rabbitmq_os_package
+- name: Install packages necessary to add rabbitmq's repository
+  apt:
+    name:
+      - apt-transport-https
+      - gnupg
+    state: latest
+    update_cache: true
 
-- name: install rabbitmq-server
-  apt: name=rabbitmq-server update_cache=yes
+- name: Add rabbitmq repo
+  deb822_repository:
+    name: rabbitmq
+    types: deb
+    uris: https://deb1.rabbitmq.com/rabbitmq-server/debian
+    suites: '{{ ansible_distribution_release }}'
+    components: main
+    architectures: amd64
+    signed_by: >-
+      https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA
 
-- name: enable rabbitmq-server to survive reboot
-  service: name=rabbitmq-server enabled=yes
+- name: Install rabbitmq-server
+  apt:
+    name: rabbitmq-server
+    state: present
+    update_cache: true
+
+- name: Enable rabbitmq-server to survive reboot
+  service:
+    name: rabbitmq-server
+    enabled: true

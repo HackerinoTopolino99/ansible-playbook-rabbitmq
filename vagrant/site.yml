@@ -1,2 +1,2 @@
 ---
-- import_tasks: standalone.yml
+- import_playbook: standalone.yml
