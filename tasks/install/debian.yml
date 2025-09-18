@@ -13,8 +13,8 @@
   deb822_repository:
     name: rabbitmq
     types: deb
-    uris: https://deb1.rabbitmq.com/rabbitmq-server/debian
-    suites: '{{ ansible_distribution_release }}'
+    uris: "https://deb1.rabbitmq.com/rabbitmq-server/debian/{{ ansible_distribution_release }}"
+    suites: "{{ ansible_distribution_release }}"
     components: main
     architectures: amd64
     signed_by: >-
