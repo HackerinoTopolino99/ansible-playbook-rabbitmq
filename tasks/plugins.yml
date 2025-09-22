@@ -1,18 +1,22 @@
 ---
 - name: Enable plugins
-  rabbitmq_plugin:
+  community.rabbitmq.rabbitmq_plugin:
     names: "{{ rabbitmq_plugins | join(',') }}"
     new_only: "{{ rabbitmq_new_only }}"
   notify: restart rabbitmq-server
   when: rabbitmq_plugins != []
 
 - name: Get the list of active plugins to disable
-  command: rabbitmq-plugins list -e -m
+  ansible.builtin.command:
+    argv:
+      - rabbitmq-plugins list
+      - -e
+      - -m
   register: result
   when: rabbitmq_plugins == []
 
 - name: Disable plugins if none added in the configuration
-  rabbitmq_plugin:
+  community.rabbitmq.rabbitmq_plugin:
     name: "{{ item }}"
     state: disabled
   notify: restart rabbitmq-server

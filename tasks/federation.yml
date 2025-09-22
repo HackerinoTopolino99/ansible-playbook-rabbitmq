@@ -1,18 +1,18 @@
 ---
 - name: Active the federation plugin
-  rabbitmq_plugin:
+  community.rabbitmq.rabbitmq_plugin:
     names: rabbitmq_federation
     new_only: true
   register: federation_plugin
 
 - name: Restart RabbitMQ to be able to setup federation
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: restarted
   when: federation_plugin.changed
 
 - name: Set the federation-upstream parameter
-  rabbitmq_parameter:
+  community.rabbitmq.rabbitmq_parameter:
     component: federation-upstream
     name: "{{ item.name }}"
     vhost: "{{ item.vhost | default('/', false) }}"
@@ -20,7 +20,7 @@
   loop: rabbitmq_federation_configuration
 
 - name: Set the policy for the federation
-  rabbitmq_policy:
+  community.rabbitmq.rabbitmq_policy:
     name: "{{ item.name }}"
     vhost: "{{ item.vhost | default('/', false) }}"
     pattern: "{{ item.pattern }}"
@@ -28,13 +28,13 @@
   loop: rabbitmq_policy_configuration
 
 - name: Get the version of rabbitmq
-  shell: rabbitmqctl status | awk '{print $NF}'
+  ansible.builtin.shell: rabbitmqctl status | awk '{print $NF}'
   register: rabbitmq_version
 
 # local-username is no longer required with 3.3.0
 # http://www.rabbitmq.com/release-notes/README-3.3.0.txt
 - name: Set the local username for the federation
-  rabbitmq_parameter:
+  community.rabbitmq.rabbitmq_parameter:
     component: federation
     name: local-username
     value: "{{ item.local_username | default('guest', false') }}"

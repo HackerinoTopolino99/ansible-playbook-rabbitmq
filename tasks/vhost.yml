@@ -1,15 +1,15 @@
 ---
 - name: Ensure rabbitmq is running
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: started
 
 - name: "Debug"
-  debug:
+  ansible.builtin.debug:
     var: rabbitmq_vhost_definitions
 
 - name: Add rabbitmq vhost
-  rabbitmq_vhost:
+  community.rabbitmq.rabbitmq_vhost:
     name: "{{ item.name }}"
     node: "{{ item.node | default('rabbit') }}"
     tracing: "{{ item.tracing | default('no') }}"
@@ -17,7 +17,7 @@
   loop: rabbitmq_vhost_definitions
 
 - name: Add rabbitmq user and set privileges
-  rabbitmq_user:
+  community.rabbitmq.rabbitmq_user:
     user: "{{ item.user }}"
     password: "{{ item.password }}"
     vhost: "{{ item.vhost | default('/', false) }}"
@@ -31,7 +31,7 @@
   loop: rabbitmq_users_definitions
 
 - name: Remove guest user (hostname)
-  rabbitmq_user:
+  community.rabbitmq.rabbitmq_user:
     user: guest
     vhost: /
     node: "rabbit@{{ ansible_hostname }}"
@@ -40,7 +40,7 @@
   ignore_errors: true
 
 - name: Remove guest user (default)
-  rabbitmq_user:
+  community.rabbitmq.rabbitmq_user:
     user: guest
     vhost: /
     state: absent

@@ -2,7 +2,7 @@
 # RabbitMQ official install
 
 - name: Install packages necessary to add rabbitmq's repository
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - gnupg
@@ -10,7 +10,7 @@
     update_cache: true
 
 - name: Add rabbitmq repo
-  deb822_repository:
+  ansible.builtin.deb822_repository:
     name: rabbitmq
     types: deb
     uris:
@@ -25,12 +25,13 @@
       https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA
 
 - name: Install rabbitmq-server
-  apt:
+  ansible.builtin.apt:
     name: rabbitmq-server
     state: present
     update_cache: true
 
 - name: Enable rabbitmq-server to survive reboot
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
+    state: started
     enabled: true

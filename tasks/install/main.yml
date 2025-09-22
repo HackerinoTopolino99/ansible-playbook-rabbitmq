@@ -1,7 +1,9 @@
 ---
 # Debian install
-- import_tasks: debian.yml
+- name: Install rabbitmq on Debian
+  ansible.builtin.import_tasks: debian.yml
   when: ansible_os_family == 'Debian'
 
-- import_tasks: redhat.yml
+- name: Install rabbitmq on RPM Distros
+  ansible.builtin.import_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
