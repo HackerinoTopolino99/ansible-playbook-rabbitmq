@@ -17,7 +17,7 @@
     name: "{{ item.name }}"
     vhost: "{{ item.vhost | default('/', false) }}"
     value: "{{ item.value }}"
-  loop: rabbitmq_federation_configuration
+  loop: "{{ rabbitmq_federation_configuration }}"
 
 - name: Set the policy for the federation
   community.rabbitmq.rabbitmq_policy:
@@ -25,7 +25,7 @@
     vhost: "{{ item.vhost | default('/', false) }}"
     pattern: "{{ item.pattern }}"
     tags: "{{ item.tags }}"
-  loop: rabbitmq_policy_configuration
+  loop: "{{ rabbitmq_policy_configuration }}"
 
 - name: Get the version of rabbitmq
   ansible.builtin.shell: rabbitmqctl status | awk '{print $NF}'
