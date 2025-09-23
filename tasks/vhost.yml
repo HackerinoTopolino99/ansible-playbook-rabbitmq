@@ -14,7 +14,7 @@
     node: "{{ item.node | default('rabbit') }}"
     tracing: "{{ item.tracing | default('no') }}"
     state: present
-  with_items: "{{ rabbitmq_users_definitions | dict2items }}"
+  with_items: "{{ rabbitmq_vhost_definitions }}"
 
 - name: Add rabbitmq user and set privileges
   community.rabbitmq.rabbitmq_user:
@@ -28,7 +28,7 @@
     write_priv: "{{ item.write_priv | default('.*') }}"
     state: present
     force: "{{ item.force|default('yes') }}"
-  with_items: "{{ rabbitmq_users_definitions | dict2items }}"
+  with_items: "{{ rabbitmq_users_definitions }}"
 
 - name: Remove guest user (hostname)
   community.rabbitmq.rabbitmq_user:
