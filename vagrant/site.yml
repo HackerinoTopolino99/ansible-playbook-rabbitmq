@@ -1,2 +1,3 @@
 ---
-- import_playbook: standalone.yml
+- name: Import standalone
+  import_playbook: standalone.yml

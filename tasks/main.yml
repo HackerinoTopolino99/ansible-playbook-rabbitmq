@@ -1,7 +1,16 @@
 ---
-- ansible.builtin.import_tasks: install/main.yml
-- ansible.builtin.import_tasks: configuration.yml
-- ansible.builtin.import_tasks: plugins.yml
-- ansible.builtin.import_tasks: vhost.yml
-- ansible.builtin.import_tasks: federation.yml
+- name: Install RabbitMQ
+  ansible.builtin.import_tasks: install/main.yml
+
+- name: Configure RabbitMQ
+  ansible.builtin.import_tasks: configuration.yml
+
+- name: Install RabbitMQ plugins
+  ansible.builtin.import_tasks: plugins.yml
+
+- name: Configure RabbitMQ virtual hosts
+  ansible.builtin.import_tasks: vhost.yml
+
+- name: Configure federation
+  ansible.builtin.import_tasks: federation.yml
   when: rabbitmq_federation

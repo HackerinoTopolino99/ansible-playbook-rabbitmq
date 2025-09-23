@@ -23,4 +23,5 @@
   tasks:
     # Flush outstanding handlers before tests.
     - meta: flush_handlers
-    - import_tasks: test_standalone.yml
+    - name: Import test
+      import_tasks: test_standalone.yml

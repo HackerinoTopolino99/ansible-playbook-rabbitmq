@@ -6,7 +6,7 @@
     name:
       - apt-transport-https
       - gnupg
-    state: latest
+    state: present
     update_cache: true
 
 - name: Add rabbitmq repo

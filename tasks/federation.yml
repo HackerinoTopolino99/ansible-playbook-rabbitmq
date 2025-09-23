@@ -28,7 +28,12 @@
   loop: "{{ rabbitmq_policy_configuration }}"
 
 - name: Get the version of rabbitmq
-  ansible.builtin.shell: rabbitmqctl status | awk '{print $NF}'
+  ansible.builtin.shell:
+    cmd: |
+      set -e -o pipefail
+      rabbitmqctl status | awk '{print $NF}'
+  args:
+    executable: /bin/bash
   register: rabbitmq_version
 
 # local-username is no longer required with 3.3.0
