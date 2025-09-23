@@ -28,7 +28,7 @@
     write_priv: "{{ item.write_priv | default('.*') }}"
     state: present
     force: "{{ item.force|default('yes') }}"
-  loop: rabbitmq_users_definitions
+  with_items: "{{ rabbitmq_users_definitions }}"
 
 - name: Remove guest user (hostname)
   community.rabbitmq.rabbitmq_user:
