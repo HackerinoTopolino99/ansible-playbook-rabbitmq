@@ -14,7 +14,7 @@
     node: "{{ item.node | default('rabbit') }}"
     tracing: "{{ item.tracing | default('no') }}"
     state: present
-  loop: rabbitmq_vhost_definitions
+  with_items: "{{ rabbitmq_users_definitions }}"
 
 - name: Add rabbitmq user and set privileges
   community.rabbitmq.rabbitmq_user:
